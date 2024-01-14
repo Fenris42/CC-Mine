@@ -64,13 +64,11 @@ end
 function retunToStart()
 --return to starting position
 
-	print(">: Returning home")
+	print(">:Returning home")
 	
 	right(2)
 	forward(distanceTraveled)
-	
-	print(">: Job done")
-	
+
 end
 
 
@@ -194,7 +192,8 @@ end
 ---
 
 function digDown()
-	
+--for consistency
+
 	turtle.digDown()
 	
 end
@@ -513,22 +512,53 @@ end
 function checkInventory()
 --check if inventory full
 	
+	local junkItems = false
+	
 	if(search("empty") == false) then
 	--no empty slot found
 		
-		if(search("cobble") == true) then
 		--search inventory for anything on the filter list to dump
+		if(filter_cobble == true and search("cobble") == true) then
+			junkItems = true
+			
+		elseif(filter_dirt == true and search("dirt") == true) then
+			junkItems = true
+			
+		elseif(filter_gravel == true and search("gravel") == true) then
+			junkItems = true
+			
+		elseif(filter_andesite == true and search("andesite") == true) then
+			junkItems = true
+			
+		elseif(filter_diorite == true and search("diorite") == true) then
+			junkItems = true
+			
+		elseif(filter_granite == true and search("granite") == true) then
+			junkItems = true
+			
+		elseif(filter_tuff == true and search("tuff") == true) then
+			junkItems = true
+			
+		end
+		
+		if(junkItems == true and justPooped == false) then
+		--dumpable items found
 			poop()
+		
+		elseif(junkItems == true and justPooped == true) then
+			poop()
+			inventoryFull = true
 		else
 		--no dumpable inventory
 			print(">:Inventory full")
 			inventoryFull = true
-		end
-		
+		end	
+	
+	else
+	--reset just pooped. inventory did not immediately fill again
+		justPooped = false
 	end
-	
-	print(">:Inventory Full:", inventoryFull)
-	
+
 end
 
 ---
@@ -589,19 +619,12 @@ function poop()
 		end
 	end
 	
-	--collect 1 block to patch hole
-	search("empty")
-	turtle.suckDown(1)
-	
-	--patch poop hole
-	forward(1)
-	right(2)
-	patch()
-	
 	--recenter
-	left(2)
-	forward(1)
+	forward(2)
 	left(1)
+	
+	--set flag to determine if repeatedly pooping
+	justPooped = true
 	
 end
 
@@ -715,6 +738,7 @@ function report()
 	print(">:")
 	print(">:Job Done")
 	print(">:Reason: ", status)
+	print(">:Tunnel Length: ", distanceTraveled)
 	
 end
 
@@ -748,7 +772,7 @@ distanceTraveled = 0
 inventoryFull = false
 outOfFuel = false
 flooding = false
-
+justPooped = false
 
 --get starting fuel
 refuel()
