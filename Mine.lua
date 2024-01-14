@@ -1,7 +1,13 @@
---Config-----------------------------------
+---------------------------------------------------------------------
+--Config
+---------------------------------------------------------------------
 --set what items to filter out when inventory is full
+--Format: filter[#] = {"minecraft/mod:block_ID",true/false}
+--true will drop items from inventory when full
+--false will disable the filter
+
 filter = {}
-filter[1] = {"minecraft:cobblestone", true}
+filter[1] = {"minecraft:cobblestone",true}
 filter[2] = {"minecraft:cobbled_deepslate",true}
 filter[3] = {"minecraft:dirt",true}
 filter[4] = {"minecraft:andesite",true}
@@ -9,58 +15,52 @@ filter[5] = {"minecraft:diorite",true}
 filter[6] = {"minecraft:granite",true}
 filter[7] = {"minecraft:tuff",true}
 filter[8] = {"minecraft:calcite",true}
--------------------------------------------
+filter[9] = {"minecraft:gravel",true}
 
---Movement--
+---------------------------------------------------------------------
+--Do not make edits below this line
+---------------------------------------------------------------------
+--Functions
+---------------------------------------------------------------------
+--Movement
+---------------------------------------------------------------------
 
 function forward(x)
 	for i = 1,x do
 		turtle.forward()
 	end
 end
-
----
-
+---------------------------
 function back(x)
 	for i = 1,x do
 		turtle.back()
 	end
 end
-
----
-
+---------------------------
 function left(x)
 	for i = 1,x do
 		turtle.turnLeft()
 	end
 end
-
----
-
+---------------------------
 function right(x)
 	for i = 1,x do
 		turtle.turnRight()
 	end
 end
-
----
-
+---------------------------
 function up(x)
 	for i = 1,x do
 		turtle.up()
 	end
 end
-
----
-
+---------------------------
 function down(x)
 	for i = 1,x do
 		turtle.down()
 	end
 end
-
----
-
+---------------------------
 function retunToStart()
 --return to starting position
 
@@ -71,10 +71,9 @@ function retunToStart()
 
 end
 
-
-
---Mining--
-
+---------------------------------------------------------------------
+--Mining
+---------------------------------------------------------------------
 function tunnel()
 -- dig a 3x3 tunnel and mine in a 5x5 area
 	
@@ -163,9 +162,7 @@ function tunnel()
 	digUp()
 
 end
-
----
-
+---------------------------
 function dig()
 --dig repeatedly forward until block is clear
 	
@@ -174,9 +171,7 @@ function dig()
 	end
 	
 end
-
----
-
+---------------------------
 function digUp()
 --dig repeatedly up until block is clear
 
@@ -185,18 +180,14 @@ function digUp()
 	end
 	
 end
-
----
-
+---------------------------
 function digDown()
 --for consistency
 
 	turtle.digDown()
 	
 end
-
----
-
+---------------------------
 function ore()
 --inspect wall for ore and mine if found
 
@@ -211,9 +202,7 @@ function ore()
 	end
 	
 end
-
----
-
+---------------------------
 function oreUp()
 --inspect ceiling for ore and mine if found
 
@@ -228,9 +217,7 @@ function oreUp()
 	end
 	
 end
-
----
-
+---------------------------
 function oreDown()
 --inspect floor for ore and mine if found
 
@@ -246,10 +233,9 @@ function oreDown()
 	
 end
 
-
-
---Walling--
-
+---------------------------------------------------------------------
+--Walling
+---------------------------------------------------------------------
 function patch()
 --patch wall with cobble
 
@@ -268,9 +254,7 @@ function patch()
 	end
 	
 end
-
----
-
+---------------------------
 function patchUp()
 --patch floor with cobble
 
@@ -289,9 +273,7 @@ function patchUp()
 	end
 	
 end
-
----
-
+---------------------------
 function patchDown()
 --patch floor with cobble
 
@@ -310,9 +292,7 @@ function patchDown()
 	end
 	
 end
-
----
-
+---------------------------
 function wall()
 --wall off tunnel
 
@@ -369,10 +349,9 @@ function wall()
 	
 end
 
-
-
---Torch--
-
+---------------------------------------------------------------------
+--Torch
+---------------------------------------------------------------------
 function torch()
 --place torch every 10 blocks
 
@@ -408,10 +387,9 @@ function torch()
 	
 end
 
-
-
---Inventory--
-
+---------------------------------------------------------------------
+--Inventory
+---------------------------------------------------------------------
 function search(item)
 --search for and select item in inventory
 
@@ -470,9 +448,7 @@ function search(item)
 	return found
 	
 end
-
----
-
+---------------------------
 function checkInventory()
 --check if inventory full
 	
@@ -492,9 +468,7 @@ function checkInventory()
 	end
 
 end
-
----
-
+---------------------------
 function poop()
 --dump cobble from inventory, reserving 1 stack for patching
 
@@ -554,10 +528,9 @@ function poop()
 	
 end
 
-
-
---Fuel--
-
+---------------------------------------------------------------------
+--Fuel
+---------------------------------------------------------------------
 function refuel()
 	
 	--calculate fuel levels
@@ -607,10 +580,50 @@ function refuel()
 	
 end
 
+---------------------------------------------------------------------
+--Status
+---------------------------------------------------------------------
+function report()
+--print out reason for completion
 
+	local status = ""
+	
+	if(inventoryFull == true) then
+		status = "Inventory full"
+	elseif(outOfFuel == true) then
+		status = "Out of fuel"
+	elseif(flooding == true) then
+		status = "Flooding"
+	end
+	
+	print(">:")
+	print(">:Job Done")
+	print(">:Reason: ", status)
+	print(">:Tunnel Length: ", distanceTraveled)
+	
+end
+---------------------------
+function abort()
+--check for various reasons to abort tunneling process
 
---Flooding--
-
+	local abort = false
+	
+	if(inventoryFull == true) then
+		abort = true
+	end
+	
+	if(outOfFuel == true) then
+		abort = true
+	end
+	
+	if(flooding == true) then
+		abort = true
+	end
+	
+	return abort
+	
+end
+---------------------------
 function checkFlooding()
 --check if tunneled into a liquid pocket
 
@@ -647,63 +660,20 @@ end
 
 
 
---Status--
-function report()
---print out reason for completion
-
-	local status = ""
-	
-	if(inventoryFull == true) then
-		status = "Inventory full"
-	elseif(outOfFuel == true) then
-		status = "Out of fuel"
-	elseif(flooding == true) then
-		status = "Flooding"
-	end
-	
-	print(">:")
-	print(">:Job Done")
-	print(">:Reason: ", status)
-	print(">:Tunnel Length: ", distanceTraveled)
-	
-end
-
----
-
-function checkAbort()
---check for various reasons to abort tunning process
-
-	local abort = false
-	
-	if(inventoryFull == true) then
-		abort = true
-	end
-	
-	if(outOfFuel == true) then
-		abort = true
-	end
-	
-	if(flooding == true) then
-		abort = true
-	end
-	
-	return abort
-	
-end
-
-
-
---Main---------------------------------------------------------------------
+---------------------------------------------------------------------
+--Main
+---------------------------------------------------------------------
 distanceTraveled = 0
 inventoryFull = false
 outOfFuel = false
 flooding = false
 
 --get starting fuel
+print("")
 refuel()
 
 --tunnel
-while(checkAbort() == false) do
+while(abort() == false) do
 	
 	tunnel()
 	distanceTraveled = distanceTraveled + 1
