@@ -62,13 +62,12 @@ end
 
 function retunToStart()
 	
-	print("Returning home")
-	print("")
+	print(">: Returning home")
 	
 	right(2)
 	forward(distanceTraveled)
 	
-	print("Job done")
+	print(">: Job done")
 	
 end
 
@@ -79,8 +78,7 @@ end
 function tunnel()
 -- dig a 3x3 tunnel and mine in a 5x5 area
 
-	print("Tunneling...")
-	print("")
+	print(">: Tunneling...")
 	
 	--tunnel bottom center
 	dig()
@@ -270,13 +268,11 @@ function patch()
 		if(search("cobble") == true) then
 		
 			turtle.place()
-			print("Patched wall")
-			print("")
+			print(">: Patched wall")
 			
 		else
 		
-			print("Out of cobble")
-			print("")
+			print(">: Out of cobble")
 			
 		end
 		
@@ -297,13 +293,11 @@ function patchDown()
 		if(search("cobble") == true) then
 		
 			turtle.placeDown()
-			print("Floor patched")
-			print("")
+			print(">: Floor patched")
 			
 		else
 		
-			print("Out of cobble")
-			print("")
+			print(">: Out of cobble")
 			
 		end
 		
@@ -323,8 +317,7 @@ function torch()
 		--check if torches available
 		if(search("torch") == true) then
 			
-			print("Lighting torch")
-			print("")
+			print(">: Lighting torch")
 			
 			--reposition
 			left(1)
@@ -345,8 +338,7 @@ function torch()
 
 		else
 		
-			print("Out of torches")
-			print("")
+			print(">: Out of torches")
 			
 		end
 		
@@ -419,7 +411,7 @@ end
 
 function checkInventory()
 --check if inventory full
-
+	
 	if(search("empty") == false) then
 	--no empty slot found
 		
@@ -431,15 +423,16 @@ function checkInventory()
 		else
 		--no dumpable inventory
 			
-			print("Inventory full")
-			print("")
+			print(">: Inventory full")
 			
 			inventoryFull = true
 				
 		end
 		
 	end
-
+	
+	print(">: Inventory Full:", inventoryFull)
+	
 end
 
 ---
@@ -447,8 +440,7 @@ end
 function poop()
 --dump cobble from inventory, reserving 1 stack for patching
 
-	print("Got to go poop")
-	print("")
+	print(">: BRB. Got to go poop")
 	
 	--dig poop hole
 	left(1)
@@ -487,7 +479,7 @@ function refuel()
 	
 	--calculate fuel levels
 	local currentFuel = turtle.getFuelLevel()
-	local minFuel = 17 + distanceTraveled --min required to complete tunnel, torch, poop and return home
+	local minFuel = 20 + distanceTraveled --min required to complete tunnel, torch, poop and return home with a tiny buffer
 	local maxFuel = 0
 	
 	if(search("fuel") == true) then
@@ -502,28 +494,22 @@ function refuel()
 		
 	end
 	
-	--status report
-	print("Fuel Status:")
-	print("Fuel    : ", currentFuel)
-	print("Min Fuel: ", minFuel)
-	print("Max Fuel: ", maxFuel)
-	print("")
+	--status
+	print(">: Fuel:",currentFuel," Min:",minFuel," Max:",maxFuel)
 	
 	--refuel
 	while(currentFuel < minFuel) do
 		
-		print("Refueling")
-		print("")
+		print(">: Refueling")
 		
 		if(search("fuel") == true) then
-			
+		--refuel if available	
+		
 			turtle.refuel(1)
 			
 		else
-			
-			print("Out of fuel")
-			print("")
-			
+		--no fuel in inventory
+		
 			outOfFuel = true
 			break
 			
@@ -538,12 +524,16 @@ function refuel()
 	if(maxFuel < minFuel) then
 		
 		outOfFuel = true
-		
-		print("Out of fuel")
-		print("")
-			
-	end
 
+	end
+	
+	--status
+	if(outOfFuel == true) then
+		
+		print(">: Out of fuel")
+		
+	end
+	
 end
 
 
@@ -553,17 +543,20 @@ distanceTraveled = 0
 inventoryFull = false
 outOfFuel = false
 
+--get starting fuel
+refuel()
+
 --tunnel
 while(inventoryFull == false and outOfFuel == false) do
 
-	refuel()
-	
 	tunnel()
 	distanceTraveled = distanceTraveled + 1
 	
 	torch()
 	
 	checkInventory()
+	
+	refuel()
 	
 end
 
