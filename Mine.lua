@@ -1,78 +1,68 @@
+--Config-----------------------------------
+--set what blocks to filter when inventory is full
+
+filter_cobble = true
+filter_dirt = true
+filter_gravel = true
+filter_andesite = true
+filter_diorite = true
+filter_granite = true
+filter_tuff = true
+
+-------------------------------------------
+
 --Movement--
 
 function forward(x)
-
 	for i = 1,x do
-	
 		turtle.forward()
-		
 	end
-	
 end
 
 ---
 
 function back(x)
-
 	for i = 1,x do
-	
 		turtle.back()
-		
 	end
-	
 end
 
 ---
 
 function left(x)
-
 	for i = 1,x do
-	
 		turtle.turnLeft()
-		
 	end
-	
 end
 
 ---
 
 function right(x)
-
 	for i = 1,x do
-	
 		turtle.turnRight()
-		
 	end
-	
 end
 
 ---
 
 function up(x)
-
 	for i = 1,x do
-	
 		turtle.up()
-		
 	end
-	
 end
 
 ---
 
 function down(x)
-
 	for i = 1,x do
-	
 		turtle.down()
-		
 	end
-	
 end
 
 ---
 
 function retunToStart()
+--return to starting position
 
 	print(">: Returning home")
 	
@@ -218,9 +208,7 @@ function ore()
 	if(success == true) then
 		
 		if(string.find(block.name, "ore")) then
-		
 			dig()
-			
 		end
 		
 	end
@@ -237,9 +225,7 @@ function oreUp()
 	if(success == true) then
 		
 		if(string.find(block.name, "ore")) then
-		
 			digUp()
-			
 		end
 		
 	end
@@ -256,9 +242,7 @@ function oreDown()
 	if(success == true) then
 		
 		if(string.find(block.name, "ore")) then
-		
 			digDown()
-			
 		end
 		
 	end
@@ -278,14 +262,10 @@ function patch()
 	--no block detected, patch
 	
 		if(search("cobble") == true) then
-		
 			turtle.place()
 			print(">: Patching")
-			
 		else
-		
 			print(">: Out of cobble")
-			
 		end
 		
 	end
@@ -303,14 +283,10 @@ function patchUp()
 	--no block detected, patch
 	
 		if(search("cobble") == true) then
-		
 			turtle.placeUp()
 			print(">: Patching")
-			
 		else
-		
 			print(">: Out of cobble")
-			
 		end
 		
 	end
@@ -328,14 +304,10 @@ function patchDown()
 	--no block detected, patch
 	
 		if(search("cobble") == true) then
-		
 			turtle.placeDown()
 			print(">: Patching")
-			
 		else
-		
 			print(">: Out of cobble")
-			
 		end
 		
 	end
@@ -395,9 +367,7 @@ function wall()
 	
 	--adjust travel distance
 	if(distanceTraveled > 4) then
-	
 		distanceTraveled = distanceTraveled - 4
-		
 	end
 	
 end
@@ -434,9 +404,7 @@ function torch()
 			right(1)
 
 		else
-		
 			print(">: Out of torches")
-			
 		end
 		
 	end
@@ -460,40 +428,75 @@ function search(item)
 		if(slot == nil) then
 		
 			if(item == "empty") then
-			
 				found = true
 				break
-				
 			end
 		
 		else
+		
 			if(item == "fuel") then
 			
 				if(slot.name == "minecraft:coal" or slot.name == "minecraft:charcoal") then
-			
 					found = true
 					break
-				
 				end
 			
 			elseif(item == "torch") then
 		
 				if(slot.name == "minecraft:torch") then
-			
 					found = true
 					break
-				
 				end
 			
 			elseif(item == "cobble") then
-		
-				if(slot.name == "minecraft:cobblestone" or slot.name == "minecraft:cobbled_deepslate") then
 			
+				if(slot.name == "minecraft:cobblestone" or slot.name == "minecraft:cobbled_deepslate") then
 					found = true
 					break
-				
 				end
+			
+			elseif(item == "dirt") then
 				
+				if(slot.name == "minecraft:dirt") then
+					found = true
+					break
+				end
+			
+			elseif(item == "gravel") then
+				
+				if(slot.name == "minecraft:gravel") then
+					found = true
+					break
+				end
+			
+			elseif(item == "andesite") then
+				
+				if(slot.name == "minecraft:andesite") then
+					found = true
+					break
+				end
+			
+			elseif(item == "diorite") then
+				
+				if(slot.name == "minecraft:diorite") then
+					found = true
+					break
+				end
+			
+			elseif(item == "granite") then
+				
+				if(slot.name == "minecraft:granite") then
+					found = true
+					break
+				end
+			
+			elseif(item == "tuff") then
+				
+				if(slot.name == "minecraft:tuff") then
+					found = true
+					break
+				end
+			
 			end
 			
 		end
@@ -513,17 +516,12 @@ function checkInventory()
 	--no empty slot found
 		
 		if(search("cobble") == true) then
-		--search inventory for cobble to dump
-				
+		--search inventory for anything on the filter list to dump
 			poop()
-				
 		else
 		--no dumpable inventory
-			
 			print(">: Inventory full")
-			
 			inventoryFull = true
-				
 		end
 		
 	end
@@ -547,12 +545,50 @@ function poop()
 	digDown()
 	right(2)
 	
-	--poop cobble
-	while(search("cobble") == true) do
-		turtle.dropDown()
+	--poop filtered blocks
+	if(filter_cobble == true) then
+		while(search("cobble") == true) do
+			turtle.dropDown()
+		end
 	end
 	
-	--collect 1 cobble to patch hole
+	if(filter_dirt == true) then
+		while(search("dirt") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	if(filter_gravel == true) then
+		while(search("gravel") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	if(filter_andesite == true) then
+		while(search("andesite") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	if(filter_diorite == true) then
+		while(search("diorite") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	if(filter_granite == true) then
+		while(search("granite") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	if(filter_tuff == true) then
+		while(search("tuff") == true) do
+			turtle.dropDown()
+		end
+	end
+	
+	--collect 1 block to patch hole
 	search("empty")
 	turtle.suckDown(1)
 	
@@ -581,14 +617,10 @@ function refuel()
 	
 	if(search("fuel") == true) then
 	--calculate how much fuel is in inventory
-	
 		maxFuel = turtle.getItemCount() * 80
-		
 	else
 	--should only happen if no fuel was supplied to turtle at start
-	
 		maxFuel = turtle.getFuelLevel()
-		
 	end
 	
 	--status
@@ -601,15 +633,11 @@ function refuel()
 		
 		if(search("fuel") == true) then
 		--refuel if available	
-		
 			turtle.refuel(1)
-			
 		else
 		--no fuel in inventory
-		
 			outOfFuel = true
 			break
-			
 		end
 		
 		--update fuel level
@@ -619,16 +647,12 @@ function refuel()
 	
 	--check if sufficient fuel left
 	if(maxFuel < minFuel) then
-		
 		outOfFuel = true
-
 	end
 	
 	--status
 	if(outOfFuel == true) then
-		
 		print(">: Out of fuel")
-		
 	end
 	
 end
@@ -646,9 +670,7 @@ function checkFlooding()
 	if(success == true) then
 		
 		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
-			
 			flooding = true
-
 		end
 		
 	end
@@ -659,18 +681,14 @@ function checkFlooding()
 	if(success == true) then
 		
 		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
-			
 			flooding = true
-
 		end
 		
 	end
 	
-
+	--status
 	if(flooding == true) then
-		
 		print(">: Flooding detected")
-		
 	end
 	
 	return flooding
@@ -686,21 +704,15 @@ function report()
 	local status = ""
 	
 	if(inventoryFull == true) then
-		
 		status = "Inventory full"
-	
 	elseif(outOfFuel == true) then
-		
 		status = "Out of fuel"
-	
 	elseif(flooding == true) then
-		
 		status = "Flooding"
-		
 	end
 	
 	print("")
-	print(">: Job done")
+	print(">: Job Done")
 	print(">: Reason: ", status)
 	
 end
@@ -747,14 +759,10 @@ while(checkAbort() == false) do
 	distanceTraveled = distanceTraveled + 1
 		
 	if(checkFlooding() == true) then
-		
 		wall()
-		
 	else
-	
 		torch()
 		checkInventory()
-		
 	end
 	
 	refuel()
