@@ -79,8 +79,9 @@ end
 
 function tunnel()
 -- dig a 3x3 tunnel and mine in a 5x5 area
-
-	print(">: Tunneling...")
+	
+	print(">:")
+	print(">:Tunneling...")
 	
 	--tunnel bottom center
 	dig()
@@ -263,9 +264,9 @@ function patch()
 	
 		if(search("cobble") == true) then
 			turtle.place()
-			print(">: Patching")
+			print(">:Patching")
 		else
-			print(">: Out of cobble")
+			print(">:Out of cobble")
 		end
 		
 	end
@@ -284,9 +285,9 @@ function patchUp()
 	
 		if(search("cobble") == true) then
 			turtle.placeUp()
-			print(">: Patching")
+			print(">:Patching")
 		else
-			print(">: Out of cobble")
+			print(">:Out of cobble")
 		end
 		
 	end
@@ -305,9 +306,9 @@ function patchDown()
 	
 		if(search("cobble") == true) then
 			turtle.placeDown()
-			print(">: Patching")
+			print(">:Patching")
 		else
-			print(">: Out of cobble")
+			print(">:Out of cobble")
 		end
 		
 	end
@@ -384,7 +385,7 @@ function torch()
 		--check if torches available
 		if(search("torch") == true) then
 			
-			print(">: Lighting torch")
+			print(">:Lighting torch")
 			
 			--reposition
 			left(1)
@@ -404,7 +405,7 @@ function torch()
 			right(1)
 
 		else
-			print(">: Out of torches")
+			print(">:Out of torches")
 		end
 		
 	end
@@ -520,13 +521,13 @@ function checkInventory()
 			poop()
 		else
 		--no dumpable inventory
-			print(">: Inventory full")
+			print(">:Inventory full")
 			inventoryFull = true
 		end
 		
 	end
 	
-	print(">: Inventory Full:", inventoryFull)
+	print(">:Inventory Full:", inventoryFull)
 	
 end
 
@@ -535,7 +536,7 @@ end
 function poop()
 --dump cobble from inventory, reserving 1 stack for patching
 
-	print(">: BRB. Got to go poop")
+	print(">:BRB. Got to go poop")
 	
 	--dig poop hole
 	left(1)
@@ -624,12 +625,12 @@ function refuel()
 	end
 	
 	--status
-	print(">: Fuel:",currentFuel," Min:",minFuel," Max:",maxFuel)
+	print(">:Fuel:",currentFuel," Min:",minFuel," Max:",maxFuel)
 	
 	--refuel
 	while(currentFuel < minFuel) do
 		
-		print(">: Refueling")
+		print(">:Refueling")
 		
 		if(search("fuel") == true) then
 		--refuel if available	
@@ -652,7 +653,7 @@ function refuel()
 	
 	--status
 	if(outOfFuel == true) then
-		print(">: Out of fuel")
+		print(">:Out of fuel")
 	end
 	
 end
@@ -688,7 +689,7 @@ function checkFlooding()
 	
 	--status
 	if(flooding == true) then
-		print(">: Flooding detected")
+		print(">:Flooding detected")
 	end
 	
 	return flooding
@@ -711,9 +712,9 @@ function report()
 		status = "Flooding"
 	end
 	
-	print("")
-	print(">: Job Done")
-	print(">: Reason: ", status)
+	print(">:")
+	print(">:Job Done")
+	print(">:Reason: ", status)
 	
 end
 
