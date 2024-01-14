@@ -3,7 +3,9 @@
 function forward(x)
 
 	for i = 1,x do
+	
 		turtle.forward()
+		
 	end
 	
 end
@@ -13,7 +15,9 @@ end
 function back(x)
 
 	for i = 1,x do
+	
 		turtle.back()
+		
 	end
 	
 end
@@ -23,7 +27,9 @@ end
 function left(x)
 
 	for i = 1,x do
+	
 		turtle.turnLeft()
+		
 	end
 	
 end
@@ -33,7 +39,9 @@ end
 function right(x)
 
 	for i = 1,x do
+	
 		turtle.turnRight()
+		
 	end
 	
 end
@@ -43,7 +51,9 @@ end
 function up(x)
 
 	for i = 1,x do
+	
 		turtle.up()
+		
 	end
 	
 end
@@ -53,7 +63,9 @@ end
 function down(x)
 
 	for i = 1,x do
+	
 		turtle.down()
+		
 	end
 	
 end
@@ -61,7 +73,7 @@ end
 ---
 
 function retunToStart()
-	
+
 	print(">: Returning home")
 	
 	right(2)
@@ -255,7 +267,7 @@ end
 
 
 
---Patching--
+--Walling--
 
 function patch()
 --patch wall with cobble
@@ -268,7 +280,32 @@ function patch()
 		if(search("cobble") == true) then
 		
 			turtle.place()
-			print(">: Patched wall")
+			print(">: Patching")
+			
+		else
+		
+			print(">: Out of cobble")
+			
+		end
+		
+	end
+	
+end
+
+---
+
+function patchUp()
+--patch floor with cobble
+
+	local block = turtle.detectUp()
+	
+	if(block == false) then
+	--no block detected, patch
+	
+		if(search("cobble") == true) then
+		
+			turtle.placeUp()
+			print(">: Patching")
 			
 		else
 		
@@ -293,13 +330,73 @@ function patchDown()
 		if(search("cobble") == true) then
 		
 			turtle.placeDown()
-			print(">: Floor patched")
+			print(">: Patching")
 			
 		else
 		
 			print(">: Out of cobble")
 			
 		end
+		
+	end
+	
+end
+
+---
+
+function wall()
+--wall off tunnel
+
+	--move back
+	right(2)
+	forward(3)
+	
+	--bottom left
+	right(1)
+	patch()
+	
+	--bottom right
+	right(2)
+	patch()
+	
+	--center right
+	up(1)
+	patch()
+	
+	--center left
+	left(2)
+	patch()
+	
+	--top left
+	up(1)
+	patch()
+	
+	--top right
+	right(2)
+	patch()
+	
+	--top center
+	left(1)
+	down(1)
+	patchUp()
+	
+	--center
+	down(1)
+	patchUp()
+	
+	--bottom center
+	back(1)
+	patch()
+	
+	--torch
+	if(search("torch") == true) then
+		turtle.placeUp()
+	end
+	
+	--adjust travel distance
+	if(distanceTraveled > 4) then
+	
+		distanceTraveled = distanceTraveled - 4
 		
 	end
 	
@@ -538,26 +635,131 @@ end
 
 
 
+--Flooding--
+
+function checkFlooding()
+--check if tunneled into a liquid pocket
+
+	--forward
+	local success, block = turtle.inspect()
+	
+	if(success == true) then
+		
+		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
+			
+			flooding = true
+
+		end
+		
+	end
+	
+	--above
+	local success, block = turtle.inspectUp()
+	
+	if(success == true) then
+		
+		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
+			
+			flooding = true
+
+		end
+		
+	end
+	
+
+	if(flooding == true) then
+		
+		print(">: Flooding detected")
+		
+	end
+	
+	return flooding
+	
+end
+
+
+
+--Status--
+function report()
+--print out reason for completion
+
+	local status = ""
+	
+	if(inventoryFull == true) then
+		
+		status = "Inventory full"
+	
+	elseif(outOfFuel == true) then
+		
+		status = "Out of fuel"
+	
+	elseif(flooding == true) then
+		
+		status = "Flooding"
+		
+	end
+	
+	print("")
+	print(">: Job done")
+	print(">: Reason: ", status)
+	
+end
+
+---
+
+function checkAbort()
+--check for various reasons to abort tunning process
+
+	local abort = false
+	
+	if(inventoryFull == true) then
+		abort = true
+	end
+	
+	if(outOfFuel == true) then
+		abort = true
+	end
+	
+	if(flooding == true) then
+		abort = true
+	end
+	
+	return abort
+	
+end
+
+
+
 --Main---------------------------------------------------------------------
 distanceTraveled = 0
 inventoryFull = false
 outOfFuel = false
+flooding = false
+
 
 --get starting fuel
 refuel()
 
 --tunnel
-while(inventoryFull == false and outOfFuel == false) do
-
+while(checkAbort() == false) do
+	
 	tunnel()
 	distanceTraveled = distanceTraveled + 1
+		
+	if(checkFlooding() == true) then
+		
+		wall()
+		
+	else
 	
-	torch()
-	
-	checkInventory()
+		torch()
+		checkInventory()
+		
+	end
 	
 	refuel()
 	
 end
 
 retunToStart()
+report()
