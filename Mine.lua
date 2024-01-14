@@ -1,14 +1,14 @@
 --Config-----------------------------------
---set what blocks to filter when inventory is full
-
-filter_cobble = true
-filter_dirt = true
-filter_gravel = true
-filter_andesite = true
-filter_diorite = true
-filter_granite = true
-filter_tuff = true
-
+--set what items to filter out when inventory is full
+filter = {}
+filter[1] = {"minecraft:cobblestone", true}
+filter[2] = {"minecraft:cobbled_deepslate",true}
+filter[3] = {"minecraft:dirt",true}
+filter[4] = {"minecraft:andesite",true}
+filter[5] = {"minecraft:diorite",true}
+filter[6] = {"minecraft:granite",true}
+filter[7] = {"minecraft:tuff",true}
+filter[8] = {"minecraft:calcite",true}
 -------------------------------------------
 
 --Movement--
@@ -161,9 +161,6 @@ function tunnel()
 	
 	--tunnel center (leaving to last prevents center area from piling up with sand/gravel)
 	digUp()
-	
-	--floor center (retry in case no cobble to start)
-	patchDown()
 
 end
 
@@ -455,46 +452,13 @@ function search(item)
 					break
 				end
 			
-			elseif(item == "dirt") then
+			elseif(item == "junk") then
 				
-				if(slot.name == "minecraft:dirt") then
-					found = true
-					break
-				end
-			
-			elseif(item == "gravel") then
-				
-				if(slot.name == "minecraft:gravel") then
-					found = true
-					break
-				end
-			
-			elseif(item == "andesite") then
-				
-				if(slot.name == "minecraft:andesite") then
-					found = true
-					break
-				end
-			
-			elseif(item == "diorite") then
-				
-				if(slot.name == "minecraft:diorite") then
-					found = true
-					break
-				end
-			
-			elseif(item == "granite") then
-				
-				if(slot.name == "minecraft:granite") then
-					found = true
-					break
-				end
-			
-			elseif(item == "tuff") then
-				
-				if(slot.name == "minecraft:tuff") then
-					found = true
-					break
+				for x = 1,#(filter) do
+					if(slot.name == filter[x][1] and filter[x][2] == true) then
+						found = true
+						break
+					end
 				end
 			
 			end
@@ -518,45 +482,13 @@ function checkInventory()
 	--no empty slot found
 		
 		--search inventory for anything on the filter list to dump
-		if(filter_cobble == true and search("cobble") == true) then
-			junkItems = true
-			
-		elseif(filter_dirt == true and search("dirt") == true) then
-			junkItems = true
-			
-		elseif(filter_gravel == true and search("gravel") == true) then
-			junkItems = true
-			
-		elseif(filter_andesite == true and search("andesite") == true) then
-			junkItems = true
-			
-		elseif(filter_diorite == true and search("diorite") == true) then
-			junkItems = true
-			
-		elseif(filter_granite == true and search("granite") == true) then
-			junkItems = true
-			
-		elseif(filter_tuff == true and search("tuff") == true) then
-			junkItems = true
-			
-		end
-		
-		if(junkItems == true and justPooped == false) then
-		--dumpable items found
+		if(search("junk") == true) then
 			poop()
-		
-		elseif(junkItems == true and justPooped == true) then
-			poop()
-			inventoryFull = true
 		else
-		--no dumpable inventory
 			print(">:Inventory full")
 			inventoryFull = true
-		end	
-	
-	else
-	--reset just pooped. inventory did not immediately fill again
-		justPooped = false
+		end
+		
 	end
 
 end
@@ -576,55 +508,49 @@ function poop()
 	digDown()
 	right(2)
 	
+	--for reserving a stack of cobble for patching
+	local reserveCobble = false
+	
 	--poop filtered blocks
-	if(filter_cobble == true) then
-		while(search("cobble") == true) do
-			turtle.dropDown()
+	for i = 1, 16 do
+		
+		turtle.select(i)
+		local slot = turtle.getItemDetail()
+		
+		if(slot ~= nil) then
+			for x = 1,#(filter) do
+				if(slot.name == filter[x][1] and filter[x][2] == true) then
+					if(slot.name == "minecraft:cobblestone" or slot.name == "minecraft:cobbled_deepslate") then
+						if(reserveCobble == false) then
+						--skip 1 stack of cobble for patching
+							reserveCobble = true
+						else
+							turtle.dropDown()
+						end
+					else
+						turtle.dropDown()
+					end
+				end
+			end
 		end
+
 	end
 	
-	if(filter_dirt == true) then
-		while(search("dirt") == true) do
-			turtle.dropDown()
-		end
-	end
-	
-	if(filter_gravel == true) then
-		while(search("gravel") == true) do
-			turtle.dropDown()
-		end
-	end
-	
-	if(filter_andesite == true) then
-		while(search("andesite") == true) do
-			turtle.dropDown()
-		end
-	end
-	
-	if(filter_diorite == true) then
-		while(search("diorite") == true) do
-			turtle.dropDown()
-		end
-	end
-	
-	if(filter_granite == true) then
-		while(search("granite") == true) do
-			turtle.dropDown()
-		end
-	end
-	
-	if(filter_tuff == true) then
-		while(search("tuff") == true) do
-			turtle.dropDown()
-		end
-	end
+	--patch hole
+	forward(1)
+	right(2)
+	patch()
 	
 	--recenter
-	forward(2)
+	left(2)
+	forward(1)
 	left(1)
 	
-	--set flag to determine if repeatedly pooping
-	justPooped = true
+	--verify if inventory is full after pooping
+	if(search("empty") == false) then
+		print(">:Inventory full")
+		inventoryFull = true
+	end
 	
 end
 
@@ -772,7 +698,6 @@ distanceTraveled = 0
 inventoryFull = false
 outOfFuel = false
 flooding = false
-justPooped = false
 
 --get starting fuel
 refuel()
