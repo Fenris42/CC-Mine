@@ -26,39 +26,51 @@ filter[9] = {"minecraft:gravel",true}
 ---------------------------------------------------------------------
 
 function forward(x)
+
 	for i = 1,x do
 		turtle.forward()
 	end
+	
 end
 ---------------------------
 function back(x)
+
 	for i = 1,x do
 		turtle.back()
 	end
+	
 end
 ---------------------------
 function left(x)
+
 	for i = 1,x do
 		turtle.turnLeft()
 	end
+	
 end
 ---------------------------
 function right(x)
+
 	for i = 1,x do
 		turtle.turnRight()
 	end
+	
 end
 ---------------------------
 function up(x)
+
 	for i = 1,x do
 		turtle.up()
 	end
+	
 end
 ---------------------------
 function down(x)
+
 	for i = 1,x do
 		turtle.down()
 	end
+	
 end
 ---------------------------
 function retunToStart()
@@ -250,6 +262,7 @@ function patch()
 		else
 			print(">:Out of cobble")
 		end
+		
 	elseif(block.name == "minecraft:gravel" or block.name == "minecraft:sand") then
 	--gravity block, replace with cobble
 		dig()
@@ -462,14 +475,24 @@ function checkInventory()
 		
 		--search inventory for anything on the filter list to dump
 		if(search("junk") == true) then
+		
 			poop()
+			sortInventory()
+			
+			--verify if inventory is full after pooping
+			--if only 1 slot remaining, mining will likely result it repeated filling of this slot with junk resulting in an infinite poop loop
+			local numEmptySlots = #(getEmptySlots())
+			
+			if(numEmptySlots < 2) then
+				print(">:Inventory full")
+				inventoryFull = true
+			end
+			
 		else
 			print(">:Inventory full")
 			inventoryFull = true
 		end
-		
 	end
-
 end
 ---------------------------
 function poop()
@@ -484,35 +507,37 @@ function poop()
 	forward(1)
 	digDown()
 	right(2)
-	
-	--for reserving a stack of cobble for patching
+
+	--poop filtered blocks reserving 1 stack of cobble for patching
 	local reserveCobble = false
-	
-	--poop filtered blocks
 	for i = 1, 16 do
 		
 		turtle.select(i)
 		local slot = turtle.getItemDetail()
 		
 		if(slot ~= nil) then
+		
 			for x = 1,#(filter) do
+			
 				if(slot.name == filter[x][1] and filter[x][2] == true) then
+				
 					if(slot.name == "minecraft:cobblestone" or slot.name == "minecraft:cobbled_deepslate") then
+					
 						if(reserveCobble == false) then
 						--skip 1 stack of cobble for patching
 							reserveCobble = true
 						else
 							turtle.dropDown()
 						end
+						
 					else
 						turtle.dropDown()
 					end
 				end
 			end
 		end
-
 	end
-	
+
 	--patch hole
 	forward(1)
 	right(2)
@@ -523,11 +548,52 @@ function poop()
 	forward(1)
 	left(1)
 	
-	--verify if inventory is full after pooping
-	if(search("empty") == false) then
-		print(">:Inventory full")
-		inventoryFull = true
+end
+---------------------------
+function sortInventory()
+--sorts inventory so items are at the front of the inventory to prevent duplicate items falling into an empty slot instead of stacking
+	
+	print(">:Sorting inventory")
+	
+	local emptySlots = getEmptySlots()
+	
+	--search inventory in reverse and place items in lowest index slot available
+	if(#(emptySlots) > 0) then
+		
+		for i = 1,#(emptySlots) do
+	
+			for x = 16,1,-1 do
+		
+				turtle.select(x)
+				local slot = turtle.getItemDetail()
+		
+				if(slot ~= nil) then
+	
+					turtle.transferTo(emptySlots[i])
+
+				end
+			end
+		end
 	end
+end
+---------------------------
+function getEmptySlots()
+	
+	local emptySlots = {}
+	
+	for i = 1,16 do
+		
+		turtle.select(i)
+		local slot = turtle.getItemDetail()
+		
+		if(slot == nil) then
+			local index = #(emptySlots) + 1
+			emptySlots[index] = i
+		end
+		
+	end
+	
+	return emptySlots
 	
 end
 
@@ -593,10 +659,13 @@ function report()
 	
 	if(inventoryFull == true) then
 		status = "Inventory full"
+		
 	elseif(outOfFuel == true) then
 		status = "Out of fuel"
+		
 	elseif(flooding == true) then
 		status = "Flooding"
+		
 	end
 	
 	print(">:")
