@@ -568,9 +568,14 @@ function sortInventory()
 				local slot = turtle.getItemDetail()
 		
 				if(slot ~= nil) then
-	
-					turtle.transferTo(emptySlots[i])
-
+					
+					--make sure to only sort items into a lower index slot than where it is already
+					if(emptySlots[i] < x) then
+						turtle.transferTo(emptySlots[i])
+					end
+					
+					break
+					
 				end
 			end
 		end
