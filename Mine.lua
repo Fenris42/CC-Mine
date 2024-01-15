@@ -239,9 +239,9 @@ end
 function patch()
 --patch wall with cobble
 
-	local block = turtle.detect()
+	local success, block = turtle.inspect()
 	
-	if(block == false) then
+	if(success == false) then
 	--no block detected, patch
 	
 		if(search("cobble") == true) then
@@ -250,7 +250,10 @@ function patch()
 		else
 			print(">:Out of cobble")
 		end
-		
+	elseif(block.name == "minecraft:gravel" or block.name == "minecraft:sand") then
+	--gravity block, replace with cobble
+		dig()
+		patch()
 	end
 	
 end
