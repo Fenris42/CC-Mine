@@ -13,7 +13,7 @@
 - Place mining turtle facing the wall in what would be the bottom center block of tunnel
 - Place a stack of fuel in inventory (either coal or charcoal)
 - Optional: Place a stack of torches in inventory
-- Start program by typing: "mine" and hitting enter
+- Start program by typing command and hit enter ```mine```
 - When turtle is done mining it will return to its starting position with a report
 - Recommend placing so there is a 2 block wide wall between tunnels
 
