@@ -5,7 +5,7 @@
 
 ## Features:
 - Mines in a 3x3 pattern
-- Ore blocks on tunnel walls are oportunistically mined
+- Ore blocks on tunnel walls are opportunistically mined
 - Places torch every 10 blocks
 - Return to start position
 - Flooding detection
