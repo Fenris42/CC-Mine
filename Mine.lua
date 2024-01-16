@@ -479,17 +479,12 @@ function checkInventory()
 			poop()
 			sortInventory()
 			
-			--verify if inventory is full after pooping
-			--if only 1 slot remaining, mining will likely result it repeated filling of this slot with junk resulting in an infinite poop loop
-			local numEmptySlots = #(getEmptySlots())
-			
-			if(numEmptySlots < 2) then
-				print(">:Inventory full")
+			--verify if inventory has at least 1 open slot
+			if(search("empty") == false) then
 				inventoryFull = true
 			end
 			
 		else
-			print(">:Inventory full")
 			inventoryFull = true
 		end
 	end
@@ -524,8 +519,13 @@ function poop()
 					if(slot.name == "minecraft:cobblestone" or slot.name == "minecraft:cobbled_deepslate") then
 					
 						if(reserveCobble == false) then
-						--skip 1 stack of cobble for patching
+							--reserve some cobble for patching
 							reserveCobble = true
+							
+							if(slot.count > 16) then
+								turtle.dropDown(slot.count - 16)
+							end
+							
 						else
 							turtle.dropDown()
 						end
@@ -555,35 +555,7 @@ function sortInventory()
 	
 	print(">:Sorting inventory")
 	
-	local emptySlots = getEmptySlots()
-	
-	--search inventory in reverse and place items in lowest index slot available
-	if(#(emptySlots) > 0) then
-		
-		for i = 1,#(emptySlots) do
-	
-			for x = 16,1,-1 do
-		
-				turtle.select(x)
-				local slot = turtle.getItemDetail()
-		
-				if(slot ~= nil) then
-					
-					--make sure to only sort items into a lower index slot than where it is already
-					if(emptySlots[i] < x) then
-						turtle.transferTo(emptySlots[i])
-					end
-					
-					break
-					
-				end
-			end
-		end
-	end
-end
----------------------------
-function getEmptySlots()
-	
+	--get list of empty slot indexes
 	local emptySlots = {}
 	
 	for i = 1,16 do
@@ -597,9 +569,27 @@ function getEmptySlots()
 		end
 		
 	end
+
+	--search inventory in reverse and place items in lowest index slot available
+	for i = 1,#(emptySlots) do
 	
-	return emptySlots
-	
+		for x = 16,1,-1 do
+		
+			turtle.select(x)
+			local slot = turtle.getItemDetail()
+		
+			if(slot ~= nil) then
+					
+				--make sure to only sort items into a lower index slot than where it is already
+				if(emptySlots[i] < x) then
+					turtle.transferTo(emptySlots[i])
+				end
+					
+				break
+					
+			end
+		end
+	end
 end
 
 ---------------------------------------------------------------------
@@ -647,11 +637,6 @@ function refuel()
 		outOfFuel = true
 	end
 	
-	--status
-	if(outOfFuel == true) then
-		print(">:Out of fuel")
-	end
-	
 end
 
 ---------------------------------------------------------------------
@@ -675,8 +660,8 @@ function report()
 	
 	print(">:")
 	print(">:Job Done")
-	print(">:Reason: ", status)
-	print(">:Tunnel Length: ", distanceTraveled)
+	print(">:Reason:", status)
+	print(">:Tunnel Length:", distanceTraveled)
 	
 end
 ---------------------------
@@ -686,14 +671,17 @@ function abort()
 	local abort = false
 	
 	if(inventoryFull == true) then
+		print(">:Inventory full")
 		abort = true
 	end
 	
 	if(outOfFuel == true) then
+		print(">:Out of fuel")
 		abort = true
 	end
 	
 	if(flooding == true) then
+		print(">:Flooding detected")
 		abort = true
 	end
 	
@@ -724,11 +712,6 @@ function checkFlooding()
 			flooding = true
 		end
 		
-	end
-	
-	--status
-	if(flooding == true) then
-		print(">:Flooding detected")
 	end
 	
 	return flooding
