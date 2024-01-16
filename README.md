@@ -15,6 +15,7 @@
 - Optional: Place a stack of torches in inventory
 - Start program by typing: "mine" and hitting enter
 - When turtle is done mining it will return to its starting position with a report
+- Recommend placing so there is a 2 block wide wall between tunnels
 
 ## Instalation:
 
