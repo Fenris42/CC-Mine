@@ -61,7 +61,7 @@
 - Type command and hit enter ```pastebin get code disk/mine.lua``` (replacing code with the pastebin code)
 - Script is now saved to floppy disk
 
-### Installing program to mining turtle
+### Installing program to mining turtle:
 - In game, right click mining turtle
 - Type command and hit enter ```copy disk/mine.lua mine```
 - Script is now installed to this mining turtle
