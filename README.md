@@ -4,11 +4,12 @@
 ![thumbnail](https://github.com/Fenris42/CC-Mine/assets/133166853/35a4010c-3932-4028-90a2-5e0b83a1faf9)
 
 ## Features:
-- Mines in a 3x3 pattern
+- Mines in a 3x3 block pattern
 - Ore blocks on tunnel walls are opportunistically mined
-- Places torch every 10 blocks
-- Flooding detection
-- Configurable junk filtering from inventory
+- Places a torch every 10 blocks
+- Floor and wall patching when required using cobblestone
+- Flooding detection in case you tunnel into a body of water or lava
+- Configurable junk filtering from inventory so you only bring back what you want
 - Return to start position when inventory is full, out of fuel or tunnel flooding detected
 
 ## Use:
