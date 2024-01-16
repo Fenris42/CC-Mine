@@ -57,4 +57,6 @@
 ### Installing program to mining turtle
 - In game, right click mining turtle
 - Type command ```copy disk/mine mine```
-- Script is now installed to this mining turtle. Repeat for each mining turtle you wish to use
+- Script is now installed to this mining turtle
+- Repeat for each mining turtle you wish to use
+  - Note: Make sure to place new turtles next to disk drive for copy command to work
