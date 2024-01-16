@@ -17,8 +17,20 @@ filter[7] = {"minecraft:tuff",true}
 filter[8] = {"minecraft:calcite",true}
 filter[9] = {"minecraft:gravel",true}
 
+--list of liquids to check for tunnel flooding
+--Format: floodBlocks[#] = "minecraft/mod:block_ID"
+floodBlocks = {}
+floodBlocks[1] = "minecraft:water"
+floodBlocks[2] = "minecraft:lava"
+
+--list of gravity blocks to check for when patching
+--Format: gravityBlocks[#] = "minecraft/mod:block_ID"
+gravityBlocks = {}
+gravityBlocks[1] = "minecraft:sand"
+gravityBlocks[2] = "minecraft:gravel"
+
 ---------------------------------------------------------------------
---Do not make edits below this line
+--Do not edit below this line
 ---------------------------------------------------------------------
 --Functions
 ---------------------------------------------------------------------
@@ -253,7 +265,27 @@ function patch()
 
 	local success, block = turtle.inspect()
 	
-	if(success == false) then
+	if(success == true) then
+		
+		--dig out gravity block if detected
+		for i = 1,#(gravityBlocks) do
+			if(block.name == gravityBlocks[i]) then
+				dig()
+				break
+			end
+		end
+		
+		--remove torch if in the way
+		if(block.name == "minecraft:wall_torch") then
+			dig()
+		end
+		
+	end
+	
+	--patching
+	local block = turtle.detect()
+	
+	if(block == false) then
 	--no block detected, patch
 	
 		if(search("cobble") == true) then
@@ -263,10 +295,6 @@ function patch()
 			print(">:Out of cobble")
 		end
 		
-	elseif(block.name == "minecraft:gravel" or block.name == "minecraft:sand") then
-	--gravity block, replace with cobble
-		dig()
-		patch()
 	end
 	
 end
@@ -482,10 +510,12 @@ function checkInventory()
 			--verify if inventory has at least 1 open slot
 			if(search("empty") == false) then
 				inventoryFull = true
+				print(">:Inventory full")
 			end
 			
 		else
 			inventoryFull = true
+			print(">:Inventory full")
 		end
 	end
 end
@@ -599,15 +629,14 @@ function refuel()
 	
 	--calculate fuel levels
 	local currentFuel = turtle.getFuelLevel()
-	local minFuel = 20 + distanceTraveled --min required to complete tunnel, torch, poop and return home with a tiny buffer
+	local minFuel = 20 + distanceTraveled --min required to complete tunnel, torch, poop and return home with a safety buffer
 	local maxFuel = 0
 	
+	--calculate how much fuel is available inventory
 	if(search("fuel") == true) then
-	--calculate how much fuel is in inventory
-		maxFuel = turtle.getItemCount() * 80
+		maxFuel = currentFuel + turtle.getItemCount() * 80
 	else
-	--should only happen if no fuel was supplied to turtle at start
-		maxFuel = turtle.getFuelLevel()
+		maxFuel = currentFuel
 	end
 	
 	--status
@@ -623,7 +652,6 @@ function refuel()
 			turtle.refuel(1)
 		else
 		--no fuel in inventory
-			outOfFuel = true
 			break
 		end
 		
@@ -635,10 +663,61 @@ function refuel()
 	--check if sufficient fuel left
 	if(maxFuel < minFuel) then
 		outOfFuel = true
+		print(">:Out of fuel")
 	end
 	
 end
 
+---------------------------------------------------------------------
+--Flooding
+---------------------------------------------------------------------
+function checkFlooding()
+--check if tunneled into a liquid pocket
+	
+	print(">:Checking for flooding")
+	
+	--above
+	checkForLiquid(turtle.inspectUp())
+	
+	--forward
+	checkForLiquid(turtle.inspect())
+	
+	--left
+	left(1)
+	checkForLiquid(turtle.inspect())
+	
+	--back
+	left(1)
+	checkForLiquid(turtle.inspect())
+	
+	--right
+	left(1)
+	checkForLiquid(turtle.inspect())
+	
+	--recenter
+	left(1)
+	
+	if(flodding == true) then
+		print(">:Flooding detected")
+	end
+	
+	return flooding
+	
+end
+---------------------------
+function checkForLiquid(success, block)
+
+	--detect
+	if(success == true) then
+		
+		for i = 1,#(floodBlocks) do
+			if(block.name == floodBlocks[i]) then
+				flooding = true
+			end
+		end
+		
+	end
+end
 ---------------------------------------------------------------------
 --Status
 ---------------------------------------------------------------------
@@ -671,54 +750,20 @@ function abort()
 	local abort = false
 	
 	if(inventoryFull == true) then
-		print(">:Inventory full")
 		abort = true
 	end
 	
 	if(outOfFuel == true) then
-		print(">:Out of fuel")
 		abort = true
 	end
 	
 	if(flooding == true) then
-		print(">:Flooding detected")
 		abort = true
 	end
 	
 	return abort
 	
 end
----------------------------
-function checkFlooding()
---check if tunneled into a liquid pocket
-
-	--forward
-	local success, block = turtle.inspect()
-	
-	if(success == true) then
-		
-		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
-			flooding = true
-		end
-		
-	end
-	
-	--above
-	local success, block = turtle.inspectUp()
-	
-	if(success == true) then
-		
-		if(block.name == "minecraft:water" or block.name == "minecraft:lava") then
-			flooding = true
-		end
-		
-	end
-	
-	return flooding
-	
-end
-
-
 
 ---------------------------------------------------------------------
 --Main
