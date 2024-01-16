@@ -17,10 +17,10 @@
 - When turtle is done mining it will return to its starting position with a report
 - Recommend placing so there is a 2 block wide wall between tunnels
 
-## Instalation:
+## Installation:
 ![Capture](https://github.com/Fenris42/CC-Mine/assets/133166853/37deb01d-e7c1-495b-bc46-0bcc1f18a668)
 
-### Preperation:
+### Preparation:
 - Download mine.lua from [Latest Release](https://github.com/Fenris42/CC-Mine/releases)
 - In game, craft the following:
   - [Mining turtle](https://computercraft.info/wiki/Turtle#Recipes)
