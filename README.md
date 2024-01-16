@@ -49,7 +49,7 @@
 ### Method 2: No access to World folder (public server)
 - Open downloaded mine.lua file with notepad
 - Select all - > Copy
-- Go to [pastebin](https://pastebin.com/)
+- Go to [Pastebin](https://pastebin.com/)
 - Paste script in "New Paste" box
 - Scroll down and set "Paste Exposure" to Pulic
 - Scroll down and click "Create New Paste"
