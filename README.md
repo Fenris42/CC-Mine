@@ -54,7 +54,7 @@
 - Select all - > Copy
 - Go to [Pastebin](https://pastebin.com/)
 - Paste script in "New Paste" box
-- Scroll down and set "Paste Exposure" to Pulic
+- Scroll down and set "Paste Exposure" to Public
 - Scroll down and click "Create New Paste"
 - URL will change to something like: "https://pastebin.com/6ypm2hBq"
 - Copy the code after "https://pastebin.com/" in this case "6ypm2hBq"
