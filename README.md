@@ -1,5 +1,6 @@
 # CC Mine
  A mining script for Minecraft mod ComputerCraft
+ 
 ![thumbnail](https://github.com/Fenris42/CC-Mine/assets/133166853/4a6361b4-85c2-441b-8093-d1a2f92dfcee)
 
 ## Features:
