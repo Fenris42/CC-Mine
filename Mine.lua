@@ -629,7 +629,7 @@ function refuel()
 	
 	--calculate fuel levels
 	local currentFuel = turtle.getFuelLevel()
-	local minFuel = 20 + distanceTraveled --min required to complete tunnel, torch, poop and return home with a safety buffer
+	local minFuel = 30 + distanceTraveled --min required to complete tunnel, torch, poop and return home with a safety buffer
 	local maxFuel = 0
 	
 	--calculate how much fuel is available inventory
@@ -718,6 +718,7 @@ function checkForLiquid(success, block)
 		
 	end
 end
+
 ---------------------------------------------------------------------
 --Status
 ---------------------------------------------------------------------
