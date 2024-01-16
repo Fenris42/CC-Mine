@@ -7,9 +7,9 @@
 - Mines in a 3x3 pattern
 - Ore blocks on tunnel walls are opportunistically mined
 - Places torch every 10 blocks
-- Return to start position
 - Flooding detection
 - Configurable junk filtering from inventory
+- Return to start position when inventory is full, out of fuel or tunnel flooding detected
 
 ## Use:
 - Place mining turtle facing the wall in what would be the bottom center block of tunnel
