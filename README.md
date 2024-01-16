@@ -60,6 +60,7 @@
 - Copy the code after "https://pastebin.com/" in this case "6ypm2hBq"
 - In game right click computer
 - Type command and hit enter ```pastebin get code disk/mine.lua``` (replacing code with the pastebin code)
+  - Ex: ```pastebin get 6ypm2hBq disk/mine.lua```
 - Script is now saved to floppy disk
 
 ### Installing program to mining turtle:
