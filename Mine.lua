@@ -762,6 +762,13 @@ function abort()
 		abort = true
 	end
 	
+	
+	
+	if(abort == true) then
+		--poop before returning
+		poop()
+	end
+	
 	return abort
 	
 end
