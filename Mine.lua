@@ -765,7 +765,7 @@ function abort()
 	
 	
 	if(abort == true) then
-		--poop before returning
+	--poop before returning
 		poop()
 	end
 	
