@@ -1,5 +1,5 @@
 # CC Mine
- A mining script for Minecraft mod [CC: Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked)
+ A mining turtle script for Minecraft mod [CC: Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked)
  
 ![thumbnail](https://github.com/Fenris42/CC-Mine/assets/133166853/35a4010c-3932-4028-90a2-5e0b83a1faf9)
 
