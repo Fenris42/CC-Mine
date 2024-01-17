@@ -1,14 +1,15 @@
 # CC Mine
- A mining script for Minecraft mod [CC: Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked)
+ A mining turtle script for Minecraft mod [CC: Tweaked](https://www.curseforge.com/minecraft/mc-mods/cc-tweaked)
  
 ![thumbnail](https://github.com/Fenris42/CC-Mine/assets/133166853/35a4010c-3932-4028-90a2-5e0b83a1faf9)
 
 ## Features:
-- Mines in a 3x3 pattern
+- Mines in a 3x3 block pattern
 - Ore blocks on tunnel walls are opportunistically mined
-- Places torch every 10 blocks
-- Flooding detection
-- Configurable junk filtering from inventory
+- Places a torch every 10 blocks
+- Floor and wall patching when required using cobblestone
+- Flooding detection in case you tunnel into a body of water or lava
+- Configurable junk filtering from inventory so you only bring back what you want
 - Return to start position when inventory is full, out of fuel or tunnel flooding detected
 
 ## Use:
@@ -53,12 +54,13 @@
 - Select all - > Copy
 - Go to [Pastebin](https://pastebin.com/)
 - Paste script in "New Paste" box
-- Scroll down and set "Paste Exposure" to Pulic
+- Scroll down and set "Paste Exposure" to Public
 - Scroll down and click "Create New Paste"
 - URL will change to something like: "https://pastebin.com/6ypm2hBq"
 - Copy the code after "https://pastebin.com/" in this case "6ypm2hBq"
 - In game right click computer
 - Type command and hit enter ```pastebin get code disk/mine.lua``` (replacing code with the pastebin code)
+  - Ex: ```pastebin get 6ypm2hBq disk/mine.lua```
 - Script is now saved to floppy disk
 
 ### Installing program to mining turtle:
